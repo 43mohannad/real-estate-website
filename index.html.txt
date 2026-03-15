@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>منصة العقارات</title>
+
+<style>
+
+body{
+font-family:Tahoma;
+margin:0;
+direction:rtl;
+background:#f4f6f9;
+}
+
+header{
+background:#0f4c81;
+color:white;
+padding:20px;
+text-align:center;
+}
+
+nav{
+background:#083358;
+padding:12px;
+text-align:center;
+}
+
+nav a{
+color:white;
+margin:10px;
+text-decoration:none;
+font-weight:bold;
+}
+
+.container{
+max-width:1200px;
+margin:auto;
+padding:30px;
+}
+
+.form-box{
+background:white;
+padding:20px;
+border-radius:10px;
+box-shadow:0 3px 10px rgba(0,0,0,0.1);
+margin-bottom:30px;
+}
+
+input,select{
+width:100%;
+padding:10px;
+margin:10px 0;
+border-radius:5px;
+border:1px solid #ccc;
+}
+
+button{
+background:#0f4c81;
+color:white;
+border:none;
+padding:12px;
+border-radius:6px;
+cursor:pointer;
+}
+
+button:hover{
+background:#1666ad;
+}
+
+.search-box{
+background:white;
+padding:20px;
+margin-bottom:30px;
+border-radius:10px;
+box-shadow:0 3px 10px rgba(0,0,0,0.1);
+}
+
+.properties{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:20px;
+}
+
+.card{
+background:white;
+border-radius:10px;
+overflow:hidden;
+box-shadow:0 2px 8px rgba(0,0,0,0.1);
+}
+
+.card img{
+width:100%;
+height:180px;
+object-fit:cover;
+}
+
+.card-body{
+padding:15px;
+}
+
+.price{
+color:green;
+font-weight:bold;
+margin:8px 0;
+}
+
+.type{
+color:#555;
+font-size:14px;
+}
+
+footer{
+background:#111;
+color:white;
+text-align:center;
+padding:20px;
+margin-top:40px;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>منصة العقارات</h1>
+<p>بيع | شراء | تأجير</p>
+</header>
+
+<nav>
+<a href="#">الرئيسية</a>
+<a href="#">العقارات</a>
+<a href="#">إضافة عقار</a>
+</nav>
+
+<div class="container">
+
+<div class="form-box">
+
+<h2>إضافة عقار</h2>
+
+<input id="title" placeholder="اسم العقار">
+<input id="location" placeholder="الموقع">
+
+<select id="type">
+<option>شقة</option>
+<option>فيلا</option>
+<option>أرض</option>
+<option>مكتب</option>
+</select>
+
+<input id="price" placeholder="السعر">
+<input id="image" placeholder="رابط صورة">
+
+<button onclick="addProperty()">إضافة</button>
+
+</div>
+
+<div class="search-box">
+
+<h2>بحث</h2>
+
+<input id="search" placeholder="ابحث عن موقع أو عقار">
+
+<select id="filterType">
+<option value="">كل الأنواع</option>
+<option>شقة</option>
+<option>فيلا</option>
+<option>أرض</option>
+<option>مكتب</option>
+</select>
+
+<button onclick="searchProperty()">بحث</button>
+
+</div>
+
+<h2>العقارات</h2>
+
+<div class="properties" id="properties"></div>
+
+</div>
+
+<footer>
+© جميع الحقوق محفوظة
+</footer>
+
+<script>
+
+let properties = JSON.parse(localStorage.getItem("properties")) || [];
+
+function displayProperties(list = properties){
+
+let container=document.getElementById("properties");
+container.innerHTML="";
+
+list.forEach(p=>{
+
+container.innerHTML+=`
+
+<div class="card">
+
+<img src="${p.image}">
+
+<div class="card-body">
+
+<h3>${p.title}</h3>
+
+<p>${p.location}</p>
+
+<div class="type">${p.type}</div>
+
+<div class="price">${p.price}</div>
+
+<button onclick="contact()">تواصل</button>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+}
+
+function addProperty(){
+
+let property={
+
+title:document.getElementById("title").value,
+
+location:document.getElementById("location").value,
+
+type:document.getElementById("type").value,
+
+price:document.getElementById("price").value,
+
+image:document.getElementById("image").value
+
+};
+
+properties.push(property);
+
+localStorage.setItem("properties",JSON.stringify(properties));
+
+displayProperties();
+
+}
+
+function searchProperty(){
+
+let text=document.getElementById("search").value.toLowerCase();
+
+let type=document.getElementById("filterType").value;
+
+let filtered=properties.filter(p=>{
+
+return (p.title.toLowerCase().includes(text) ||
+
+p.location.toLowerCase().includes(text)) &&
+
+(type=="" || p.type==type);
+
+});
+
+displayProperties(filtered);
+
+}
+
+function contact(){
+
+alert("تواصل معنا عبر واتساب");
+
+}
+
+displayProperties();
+
+</script>
+
+</body>
+</html>
